@@ -33,10 +33,10 @@ void draw() {
   strokeWeight(10);
   fill(0, 0, 255);
   stroke(0, 0, 255);
-  g0.move();
-  g1.move();
-  point(g0.x, g0.y);
-  point(g1.x, g1.y);
+  for (int i = 0 ; i < WELLS ; i++) {
+    wells[i].move();
+    point(wells[i].x, wells[i].y);
+  }
 }
 
 class GravityWell {
