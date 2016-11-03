@@ -2,20 +2,38 @@ import peasy.*;
 
 int SIZE = 50;
 int MAG = 20;
+int WELLS = 20;
+boolean video = true;
 
 PeasyCam cam;
 float[][] z = new float[SIZE][SIZE];
-GravityWell g0, g1;
+GravityWell[] wells = new GravityWell[WELLS];
 
 void setup() {
   size(640, 360, P3D);
   cam = new PeasyCam(this, 500);
-  g0 = new GravityWell();
-  g1 = new GravityWell();
+  for (int i = 0 ; i < WELLS ; i++) {
+    wells[i] = new GravityWell();
+  }
 }
 
 void draw() {
   background(0);
+  
+  // calc z
+  for (int y = 0; y < SIZE; y++) {
+    for (int x = 0; x < SIZE; x++) {
+      float val = 0;
+      for (int well = 0 ; well < WELLS ; well++) {
+        // square of distance
+        float d2 = sq(x - wells[well].x / MAG) + sq(y - wells[well].y / MAG);
+        val += 50 / (d2 + 4);
+      }
+      z[x][y] = 10 * val;
+    }
+  }
+
+  
   strokeWeight(1);
   stroke(0, 255, 0);
   noFill();
@@ -37,18 +55,31 @@ void draw() {
     wells[i].move();
     point(wells[i].x, wells[i].y);
   }
+  
+  if (video) {
+    saveFrame("frame#####.png");
+    if (frameCount > 500) {
+      exit();
+    }
+  }
 }
 
 class GravityWell {
   float a = random(TWO_PI);
-  float d = random(-.02, .02);
-  float px = random(-5, 5);
-  float py = random(-5, 5);
+  float d = random(-.012, .012);
+  float px = random(-3, 3);
+  float py = random(-3, 3);
   public float x, y;
   
   void move() {
     a += d;
     x = SIZE * MAG * (.5 + .5 * sin(a * px));
     y = SIZE * MAG * (.5 + .5 * sin(a * py));
+  }
+}
+
+void keyPressed() {
+  if (key == 's') {
+    saveFrame("snap####.png");
   }
 }
