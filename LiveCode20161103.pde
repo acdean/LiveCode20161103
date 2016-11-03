@@ -1,9 +1,9 @@
 import peasy.*;
 
 int SIZE = 50;
-int MAG = 20;
-int WELLS = 20;
-boolean video = true;
+int MAG = 25;
+int WELLS = 25;
+boolean video = false;
 
 PeasyCam cam;
 float[][] z = new float[SIZE][SIZE];
@@ -25,14 +25,14 @@ void draw() {
     for (int x = 0; x < SIZE; x++) {
       float val = 0;
       for (int well = 0 ; well < WELLS ; well++) {
-        // square of distance
+        // inverse square law
         float d2 = sq(x - wells[well].x / MAG) + sq(y - wells[well].y / MAG);
-        val += 50 / (d2 + 4);
+        // add something to the divisor to avoid divide by zero errors 
+        val += 100 / (d2 + 5);
       }
       z[x][y] = 10 * val;
     }
   }
-
   
   strokeWeight(1);
   stroke(0, 255, 0);
@@ -49,8 +49,8 @@ void draw() {
   }
   endShape();
   strokeWeight(10);
-  fill(0, 0, 255);
-  stroke(0, 0, 255);
+  fill(255, 0, 0);
+  stroke(255, 0, 0);
   for (int i = 0 ; i < WELLS ; i++) {
     wells[i].move();
     point(wells[i].x, wells[i].y);
@@ -66,7 +66,7 @@ void draw() {
 
 class GravityWell {
   float a = random(TWO_PI);
-  float d = random(-.012, .012);
+  float d = random(-.005, .005);
   float px = random(-3, 3);
   float py = random(-3, 3);
   public float x, y;
