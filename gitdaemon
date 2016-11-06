@@ -3,6 +3,8 @@ if [ ! -f ".git" ]; then
 	git init .
 fi
 
+git add .gitignore
+
 # continually check and add new files
 while (true)
 do
